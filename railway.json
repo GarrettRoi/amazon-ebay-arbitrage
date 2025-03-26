@@ -1,5 +1,3 @@
-# railway.json configuration file for Amazon to eBay Arbitrage System
-
 {
   "build": {
     "builder": "DOCKERFILE",
