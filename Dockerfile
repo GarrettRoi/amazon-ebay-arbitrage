@@ -6,7 +6,7 @@ WORKDIR /app/frontend
 COPY frontend/package.json ./
 RUN npm install --legacy-peer-deps
 COPY frontend/ ./
-RUN CI=false GENERATE_SOURCEMAP=false npm run build
+RUN CI=false GENERATE_SOURCEMAP=false npm run build --legacy-peer-deps
 
 # Stage 2: Backend build and final image
 FROM node:16-alpine
