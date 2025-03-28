@@ -1,41 +1,16 @@
+const { Settings } = require('../models');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
-const Settings = require('../models/settings');
 
-// @desc    Get system settings
+// @desc    Get settings
 // @route   GET /api/v1/settings
 // @access  Private
 exports.getSettings = asyncHandler(async (req, res, next) => {
-  // Get the settings - there should only be one document
-  const settings = await Settings.findOne();
-
-  if (!settings) {
-    // If no settings exist, create default settings
-    const defaultSettings = await Settings.create({
-      ebaySettings: {
-        markupPercentage: 15,
-        autoList: true,
-        maxListingPrice: 200,
-        minProfitMargin: 10
-      },
-      amazonSettings: {
-        useAmazonPrime: true,
-        maxPurchasePrice: 150,
-        preferredCategories: ['Electronics', 'Home & Kitchen', 'Toys & Games']
-      },
-      systemSettings: {
-        scanFrequencyMinutes: 60,
-        orderCheckFrequencyMinutes: 30,
-        enableNotifications: true,
-        notificationEmail: req.user.email
-      }
-    });
-
-    return res.status(200).json({
-      success: true,
-      data: defaultSettings
-    });
-  }
+  // Get the first settings record or create default if none exists
+  let [settings] = await Settings.findOrCreate({
+    where: {},
+    defaults: {}
+  });
 
   res.status(200).json({
     success: true,
@@ -45,20 +20,16 @@ exports.getSettings = asyncHandler(async (req, res, next) => {
 
 // @desc    Update settings
 // @route   PUT /api/v1/settings
-// @access  Private/Admin
+// @access  Private
 exports.updateSettings = asyncHandler(async (req, res, next) => {
-  let settings = await Settings.findOne();
+  // Get the first settings record or create default if none exists
+  let [settings] = await Settings.findOrCreate({
+    where: {},
+    defaults: {}
+  });
 
-  if (!settings) {
-    // If no settings exist, create with the provided data
-    settings = await Settings.create(req.body);
-  } else {
-    // Update existing settings
-    settings = await Settings.findOneAndUpdate({}, req.body, {
-      new: true,
-      runValidators: true
-    });
-  }
+  // Update settings
+  settings = await settings.update(req.body);
 
   res.status(200).json({
     success: true,

@@ -33,6 +33,9 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.3",
     "morgan": "^1.10.0",
+    "pg": "^8.14.1",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.2",
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {

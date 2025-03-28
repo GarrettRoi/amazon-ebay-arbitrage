@@ -10,13 +10,17 @@ const rateLimit = require('express-rate-limit');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const errorHandler = require('./middleware/error');
-const connectDB = require('./config/db');
+const { connectDB } = require('./config/database');
+const { initializeModels } = require('./models');
 
 // Load env vars
 dotenv.config({ path: './config/.env' });
 
 // Connect to database
 connectDB();
+
+// Initialize models
+initializeModels();
 
 // Route files
 const auth = require('./routes/auth');
