@@ -28,6 +28,9 @@ const arbitrage = require('./routes/arbitrage');
 
 const app = express();
 
+// Trust proxy for Railway deployment
+app.set('trust proxy', 1);
+
 // Body parser
 app.use(express.json());
 
@@ -75,7 +78,6 @@ app.use('/api/v1/arbitrage', arbitrage);
 // Serve frontend in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../../frontend/build')));
-
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../../frontend/build', 'index.html'));
   });
